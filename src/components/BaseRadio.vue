@@ -5,11 +5,14 @@
     :value="value"
     v-bind="$attrs"
     @change="$emit('update:modelValue', $event.target.value)"
+    :id="uuid"
   />
-  <label v-if="label">{{ label }}</label>
+  <label v-if="label" :for="uuid">{{ label }}</label>
 </template>
 
 <script>
+import UniqueID from '@/features/UniqueID';
+
 export default {
   inheritAttrs: false,
   props: {
@@ -26,6 +29,11 @@ export default {
       required: true
     }
   },
-  emits: ['update:modelValue']
+  emits: ['update:modelValue'],
+  setup() {
+    const uuid = UniqueID().getID()
+
+    return { uuid }
+  }
 }
 </script>

@@ -9,52 +9,64 @@
         v-model="event.category"
       />
 
-      <h3>Name & describe your event</h3>
+      <fieldset>
+        <legend>Name & describe your event</legend>
 
-      <BaseInput
-        label="Title"
-        v-model="event.title"
-        type="text"
-      />
-
-      <BaseInput
-        label="Description"
-        v-model="event.description"
-        type="text"
-      />
-
-      <h3>Where is your event?</h3>
-
-      <BaseInput
-        label="Location"
-        v-model="event.location"
-        type="text"
-      />
-
-      <h3>Are pets allowed?</h3>
-      <div>
-        <BaseRadioGroup
-          v-model="event.pets"
-          name="pets"
-          :options="petOptions"
+        <BaseInput
+          label="Title"
+          v-model="event.title"
+          type="text"
         />
-      </div>
 
-      <h3>Extras</h3>
-
-      <div>
-        <BaseCheckbox
-          v-model="event.extras.catering"
-          label="Catering"
+        <BaseInput
+          label="Description"
+          v-model="event.description"
+          type="text"
         />
-      </div>
+      </fieldset>
 
-      <div>
-        <BaseCheckbox
-          v-model="event.extras.music"
-          label="Live music"
+      <fieldset>
+        <legend>Where is your event?</legend>
+
+        <BaseInput
+          label="Location"
+          v-model="event.location"
+          type="text"
+          error="This input has an error!"
         />
-      </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pets</legend>
+
+        <p>Are pets allowed?</p>
+
+        <div>
+          <BaseRadioGroup
+            v-model="event.pets"
+            name="pets"
+            :options="petOptions"
+          />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Extras</legend>
+
+        <div>
+          <BaseCheckbox
+            v-model="event.extras.catering"
+            label="Catering"
+          />
+        </div>
+
+        <div>
+          <BaseCheckbox
+            v-model="event.extras.music"
+            label="Live music"
+          />
+        </div>
+      </fieldset>
 
       <button class="button -fill-gradient">Submit</button>
     </form>
@@ -96,7 +108,7 @@ export default {
     methods: {
       sendForm() {
         axios.post(
-          `https://my-json-server.typicode.com/Mohammed-Gamal/vue-3-forms`, this.event
+          `https://my-json-server.typicode.com/Mohammed-Gamal/vue-3-forms/events`, this.event
         )
           .then(response => {
             console.log('Response', response)
@@ -108,3 +120,17 @@ export default {
     }
 }
 </script>
+
+<style>
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  font-size: 28px;
+  font-weight: 700;
+  margin-top: 20px;
+}
+</style>
