@@ -105,7 +105,7 @@ export default {
     setup() {
       const validationSchema = object({
         category: string().required(),
-        title: string().required('A cool title is required').min(3),
+        title: string().required('A cool title is required').min(3).lazy,
         description: string().required(),
         location: string(),
         pets: number(),
@@ -122,13 +122,13 @@ export default {
         }
       })
 
-      const { value: category }     =   useField('category')
-      const { value: title }        =   useField('title')
-      const { value: description }  =   useField('description')
-      const { value: location }     =   useField('location')
-      const { value: pets }         =   useField('pets')
-      const { value: catering }     =   useField('catering')
-      const { value: music }        =   useField('music')
+      const { value: category    }   =   useField('category')
+      const { value: title       }   =   useField('title')
+      const { value: description }   =   useField('description')
+      const { value: location    }   =   useField('location')
+      const { value: pets        }   =   useField('pets')
+      const { value: catering    }   =   useField('catering')
+      const { value: music       }   =   useField('music')
 
       const submit = handleSubmit(values => {
         axios.post(

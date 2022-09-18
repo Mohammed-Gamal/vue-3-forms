@@ -1,19 +1,20 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="submit">
     <BaseInput
       label="Email"
       type="email"
-      v-model="email"
-      :error="emailError"
-      :class="{ error: emailError }"
+      :modelValue="email"
+      @change="handleChange"
+      :error="errors.email"
+      :class="{ error: errors.email }"
     />
 
     <BaseInput
       label="Password"
       type="password"
       v-model="password"
-      :error="passwordError"
-      :class="{ error: passwordError }"
+      :error="errors.password"
+      :class="{ error: errors.password }"
     />
 
     <BaseButton class="-fill-gradient">Submit</BaseButton>
@@ -22,48 +23,37 @@
 
 <script>
 import { useField, useForm } from 'vee-validate'
+import { object, string } from 'yup'
 
 export default {
   setup () {
-    function onSubmit () {
-      alert('Submitted')
-    }
-
     // Validations Schema
-    const validations = {
-      email: value => {
-        if (!value) return 'This field is required!'
-
-        const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-        if (!regex.test(String(value).toLowerCase())) return 'Please enter a valid email address!'
-
-        return true
-      },
-      password: value => {
-        const requiredMessage = 'This field is required!'
-
-        if (value === undefined || value === null) return requiredMessage
-        if(!String(value).length) return requiredMessage
-
-        return true
-      }
-    }
-
-    useForm({
-      validationSchema: validations
+    const validationSchema = object({
+      email: string().required().email(),
+      password: string().required().min(5)
     })
 
-    const { value: email, errorMessage: emailError} = useField('email')
-    const { value: password, errorMessage: passwordError } = useField('password')
+    const { handleSubmit, errors, setFieldValue } = useForm({
+      validationSchema
+    })
 
+    const { value: email } = useField('email')
+    const { value: password } = useField('password')
+
+    const handleChange = (event) => {
+      setFieldValue('email', event.target.value)
+    }
+
+    const submit = handleSubmit(values => {
+      console.log('Submit', values)
+    })
 
     return {
-      onSubmit,
       email,
-      emailError,
       password,
-      passwordError
+      submit,
+      errors,
+      handleChange
     }
   }
 }
