@@ -1,6 +1,7 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link>
+    <router-link :to="{ name: 'home' }">Home</router-link> |
+    <router-link :to="{ name: 'login' }">Login</router-link>
   </nav>
 
   <router-view />
@@ -55,6 +56,7 @@ a {
   color: #39b982;
   font-weight: 600;
   background-color: transparent;
+  margin: 10px;
 }
 
 img {
@@ -249,6 +251,7 @@ textarea {
 [type="text"],
 [type="number"],
 [type="search"],
+[type="email"],
 [type="password"] {
   height: 52px;
   width: 100%;
@@ -259,6 +262,7 @@ textarea {
 [type="text"]:focus,
 [type="number"]:focus,
 [type="search"]:focus,
+[type="email"]:focus,
 [type="password"]:focus {
   border-color: #39b982;
 }
@@ -329,6 +333,7 @@ select::ms-expand {
   font-weight: 600;
   white-space: nowrap;
   transition: all 0.2s linear;
+  cursor: pointer;
 }
 
 .button:hover {

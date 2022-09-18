@@ -8,9 +8,17 @@
     :id="uuid"
   />
   <label v-if="label" :for="uuid">{{ label }}</label>
+
+  <BaseErrorMessage
+    v-if="error"
+    :id="`${uuid}-error`"
+  >
+    {{ error }}
+  </BaseErrorMessage>
 </template>
 
 <script>
+import SetupFormComponent from '@/features/SetupFormComponent'
 import UniqueID from '@/features/UniqueID';
 
 export default {
@@ -27,10 +35,15 @@ export default {
     value: {
       type: [String, Number],
       required: true
+    },
+    error: {
+      type: String,
+      default: ''
     }
   },
   emits: ['update:modelValue'],
-  setup() {
+  setup(props, context) {
+    const { updateValue } = SetupFormComponent(props, context)
     const uuid = UniqueID().getID()
 
     return { uuid }

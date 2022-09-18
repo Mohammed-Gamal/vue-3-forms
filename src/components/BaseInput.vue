@@ -10,17 +10,16 @@
     :aria-invalid="error ? true : null"
   >
   <!-- aria-live, alternative for role="alert" -->
-  <p
+  <BaseErrorMessage
     v-if="error"
     :id="`${uuid}-error`"
-    class="errorMessage"
-    aria-live="assertive"
   >
     {{ error }}
-  </p>
+  </BaseErrorMessage>
 </template>
 
 <script>
+import SetupFormComponent from '@/features/SetupFormComponent'
 import UniqueID from '@/features/UniqueID'
 
 export default {
@@ -51,10 +50,11 @@ export default {
       }
     }
   },
-  setup() {
+  setup(props, context) {
+    const { updateValue } = SetupFormComponent(props, context)
     const uuid = UniqueID().getID()
 
-    return { uuid }
+    return { updateValue, uuid }
   }
 }
 </script>

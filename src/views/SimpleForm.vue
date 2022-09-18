@@ -32,7 +32,6 @@
           label="Location"
           v-model="event.location"
           type="text"
-          error="This input has an error!"
         />
       </fieldset>
 
@@ -68,7 +67,7 @@
         </div>
       </fieldset>
 
-      <button class="button -fill-gradient">Submit</button>
+      <BaseButton class="button -fill-gradient">Submit</BaseButton>
     </form>
   </div>
 </template>
