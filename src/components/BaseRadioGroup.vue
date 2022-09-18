@@ -10,6 +10,7 @@
       :value="option.value"
       :name="name"
       v-model.number="value"
+      :error="error"
     />
   </component>
 </template>
@@ -32,6 +33,10 @@ export default {
     vertical: {
       type: Boolean,
       default: false
+    },
+    error: {
+      type: String,
+      default: ''
     }
   },
   emits: ['update:modelValue'],

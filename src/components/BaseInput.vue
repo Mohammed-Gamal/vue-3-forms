@@ -5,7 +5,7 @@
     v-bind="$attrs"
     :placeholder="label"
     :id="uuid"
-    class="field"
+    :class="['field', { error }]"
     :aria-describedby="error ? `${uuid}-error` : null"
     :aria-invalid="error ? true : null"
   >

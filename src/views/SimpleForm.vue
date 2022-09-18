@@ -2,11 +2,12 @@
   <div>
     <h1>Create an event</h1>
 
-    <form @submit.prevent="sendForm">
+    <form @submit.prevent="submit">
       <BaseSelect
         label="Select a category"
         :options="categories"
-        v-model="event.category"
+        v-model="category"
+        :error="errors.category"
       />
 
       <fieldset>
@@ -14,14 +15,16 @@
 
         <BaseInput
           label="Title"
-          v-model="event.title"
           type="text"
+          v-model="title"
+          :error="errors.title"
         />
 
         <BaseInput
           label="Description"
-          v-model="event.description"
           type="text"
+          v-model="description"
+          :error="errors.description"
         />
       </fieldset>
 
@@ -30,8 +33,9 @@
 
         <BaseInput
           label="Location"
-          v-model="event.location"
           type="text"
+          v-model="location"
+          :error="errors.location"
         />
       </fieldset>
 
@@ -42,9 +46,10 @@
 
         <div>
           <BaseRadioGroup
-            v-model="event.pets"
             name="pets"
             :options="petOptions"
+            v-model="pets"
+            :error="errors.pets"
           />
         </div>
       </fieldset>
@@ -54,15 +59,17 @@
 
         <div>
           <BaseCheckbox
-            v-model="event.extras.catering"
             label="Catering"
+            v-model="catering"
+            :error="errors.catering"
           />
         </div>
 
         <div>
           <BaseCheckbox
-            v-model="event.extras.music"
             label="Live music"
+            v-model="music"
+            :error="errors.music"
           />
         </div>
       </fieldset>
@@ -74,6 +81,7 @@
 
 <script>
 import axios from 'axios'
+import { useField, useForm } from 'vee-validate'
 
 export default {
     data() {
@@ -87,35 +95,100 @@ export default {
           "food",
           "community"
         ],
-        event: {
-          category: "",
-          title: "",
-          description: "",
-          location: "",
-          pets: 1,
-          extras: {
-              catering: false,
-              music: false
-          }
-        },
         petOptions: [
           {label: 'Yes', value: 1},
           {label: 'No', value: 0}
         ]
       };
     },
-    methods: {
-      sendForm() {
+    setup() {
+      const required = value => {
+        const requiredMessage = 'This field is required!'
+
+        if (value === undefined || value === null) return requiredMessage
+        if (!String(value).length) return requiredMessage
+
+        return true
+      }
+
+      const minLength = (number, value) => {
+        if (String(value).length < number) return `This field must contain at least ${number} characters!`
+
+        return true
+      }
+
+      const anything = () => {
+        return true
+      }
+
+      const validationSchema = {
+        category: required,
+        title: value => {
+          const req = required(value)
+          if (req !== true) return req
+
+          const min = minLength(3, value)
+          if (min !== true) return min
+
+          return true
+        },
+        description: required,
+        location: undefined,
+        pets: anything,
+        catering: anything,
+        music: anything
+      }
+
+      const { handleSubmit, errors } = useForm({
+        validationSchema,
+        initialValues: {
+          pets: 1,
+          catering: false,
+          music: false
+        }
+      })
+
+      const { value: category }     =   useField('category')
+      const { value: title }        =   useField('title')
+      const { value: description }  =   useField('description')
+      const { value: location }     =   useField('location')
+      const { value: pets }         =   useField('pets')
+      const { value: catering }     =   useField('catering')
+      const { value: music }        =   useField('music')
+
+      const submit = handleSubmit(values => {
         axios.post(
           `http://localhost:3000/events`,
-          this.event
+          {
+            "category": category.value,
+            "title": title.value,
+            "description": description.value,
+            "location": location.value,
+            "pets": pets.value,
+            "extras": {
+              "catering": catering.value,
+              "music": music.value
+            }
+          }
         )
-          .then(response => {
-            console.log('Response', response)
-          })
-          .catch(error => {
-            console.log('Error:', error)
-          })
+        .then(res => {
+          console.log('Response:', res)
+        })
+        .catch(err => {
+          console.log('Error', err)
+        })
+      })
+
+      return {
+        category,
+        title,
+        description,
+        location,
+        pets,
+        catering,
+        music,
+        submit,
+        errors
       }
     }
 }
