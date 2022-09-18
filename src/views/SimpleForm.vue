@@ -107,7 +107,8 @@ export default {
     methods: {
       sendForm() {
         axios.post(
-          `https://my-json-server.typicode.com/Mohammed-Gamal/vue-3-forms/events`, this.event
+          `http://localhost:3000/events`,
+          this.event
         )
           .then(response => {
             console.log('Response', response)

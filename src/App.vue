@@ -264,6 +264,7 @@ textarea {
 [type="search"]:focus,
 [type="email"]:focus,
 [type="password"]:focus {
+  outline: none;
   border-color: #39b982;
 }
 
@@ -276,8 +277,8 @@ textarea {
   display: none;
 }
 
-.error {
-  border: 1px solid red;
+.error:focus {
+  border-color: red;
 }
 
 select {
